@@ -12,6 +12,24 @@ export default (err, req, res, next) => {
     error = new ErrorHandler(message, 404);
   }
 
+  ///Handle MongoDB Duplicate Key Error
+  if (err.code === 11000) {
+    const message = `Duplicate ${Object.keys(err.keyValue)} entered!!`;
+    error = new ErrorHandler(message, 400);
+  }
+
+  ///Handle Wrong JWT Error
+  if (err.name === "JsonWebTokenError") {
+    const message = `JSON Web token is invalid. Try again!!`;
+    error = new ErrorHandler(message, 400);
+  }
+
+  ///Handle Expired JWT Error
+  if (err.name === "TokenExpiredError") {
+    const message = `JSON Web token is expired. Try again!!`;
+    error = new ErrorHandler(message, 400);
+  }
+
   ///Handle Validation Error
   if (err.name === "ValidationError") {
     const message = Object.values(err.errors).map((value) => value.message);

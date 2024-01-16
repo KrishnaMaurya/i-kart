@@ -1,5 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
+import cookieParser from "cookie-parser";
 import errorMiddleware from "./middlewares/errors.js";
 const app = express();
 
@@ -16,12 +17,14 @@ dotenv.config({ path: "backend/config/config.env" });
 connectDatabase();
 
 app.use(express.json());
-
+app.use(cookieParser());
 //import routes
 import productRoutes from "./routes/products.js";
+import authRoutes from "./routes/auth.js";
 import { connectDatabase } from "./config/dbConnect.js";
 
 app.use("/api/v1", productRoutes);
+app.use("/api/v1", authRoutes);
 
 //Using error Middleware
 app.use(errorMiddleware);
